@@ -1,9 +1,10 @@
+
 # ovf2vmx
-VMX to OVF virtual machines converter.
-(ovftool wrapper)
+VMX to OVF virtual machines converter. (ovftool wrapper)
+I created this tool to make conversion easier for old ESX versions.
 
 ## Usage:
-vmx2ovf [-h] [-v] [-d DEST] [-z | -Z] FILE...
+    vmx2ovf [-h] [-v] [-d DEST] [-z | -Z] FILE...
 
 ## Options:
     -h, --help              Print this help.
