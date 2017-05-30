@@ -6,7 +6,7 @@
 VMX to OVF VMWare virtual machines converter.
 
 Usage:
-    vmx2ovf.py [-h] [-v] [-d DEST] [-z | -Z] FILE...
+    vmx2ovf [-h] [-v] [-d DEST] [-z | -Z] FILE...
 
 Options:
     -h, --help              Print this help.
@@ -59,9 +59,9 @@ def edit_ovf_file(ovf_path):
     for n, line in enumerate(ovf):
         if "VirtualSystemType" in line:
             ovf[n] = ("        <vssd:VirtualSystemType>vmx-8" +
-                             "</vssd:VirtualSystemType>\n")
+                      "</vssd:VirtualSystemType>\n")
             break
-                
+
     with open(ovf_path, "w") as f:
         f.writelines(ovf)
 
@@ -82,13 +82,13 @@ def edit_mf_file(ovf_path, mf_path):
     # Modify MF with new OVF SHA1
     with open(mf_path, "r") as f:
         mf = f.readlines()
-        
+
     ovf_line = mf[0].split("= ")[0]
     mf[0] = "= ".join([ovf_line, ovf_sha1.hexdigest()]) + "\n"
 
     with open(mf_path, "w") as f:
         f.writelines(mf)
-        
+
     print(" [+] MF modified.")
 
 
@@ -98,10 +98,10 @@ def convert(vmx_path, vm_name, dest_path):
     """
     print("    ----- Start ovftool -----")
     p = Popen([get_ovftool_path(), "--name=" + vm_name, vmx_path, dest_path])
-    
+
     convert_return = p.wait()
     print("    ----- Stop ovftool -----\n")
-    
+
     if convert_return == 1:
         raise ConvertException(" [-] VM convertion failed for: " + vmx_path)
 
@@ -127,7 +127,6 @@ def zip_result(dest_path, vm_name, delete):
             list_files.append(f)
         return list_files
 
-
     def delete_path(path_to_browse):
         """delete all files into provided path and path itself."""
         print(" [+] Removing files.")
@@ -136,7 +135,6 @@ def zip_result(dest_path, vm_name, delete):
             print("     > %s removed" % f)
         os.rmdir(path_to_browse)
         print(" [+] Files removed.")
-
 
     abs_path = os.path.join(dest_path, vm_name)
     zip_path = abs_path + ".zip"
@@ -187,22 +185,22 @@ def get_vm_name(vmx_path, dest_path, *, _ts=None):
     """
     vm_name = ".".join(os.path.split(vmx_path)[1].split(".")[:-1])
     new_vm_name = vm_name
-    
+
     if os.path.exists(os.path.join(dest_path, vm_name)):
         if not _ts:
             _ts = datetime.now().strftime('%Y%m%d_%H%M%S')
-        
+
         new_vm_name += "_" + _ts
-    
+
     return vm_name, new_vm_name
 
 
 def main():
     # Get arguments
     args = docopt(__doc__, version="0.4")
-    dest_path = args["--destination"]   or "_converted"
+    dest_path = args["--destination"] or "_converted"
     delete    = args["--zip-only"]
-    zippable  = args["--zip"]           or delete
+    zippable  = args["--zip"]         or delete
     vm_queue  = args["FILE"]
 
     # Create folder for converted VMs
@@ -216,10 +214,10 @@ def main():
             continue
 
         vmx_path = os.path.abspath(os.path.expanduser(vm))
-        orig_vm_name, vm_name = get_vm_name(vmx_path, dest_path)
+        ori_vm_name, vm_name = get_vm_name(vmx_path, dest_path)
 
         try:
-            convert(vmx_path, vm_name, dest_path.replace(vm_name, orig_vm_name))
+            convert(vmx_path, vm_name, dest_path.replace(vm_name, ori_vm_name))
 
             if zippable:
                 zip_result(dest_path, vm_name, delete)
