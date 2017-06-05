@@ -1,7 +1,8 @@
 
 # ovf2vmx
 VMX to OVF virtual machines converter. (ovftool wrapper)
-I created this tool to make conversion easier for old ESX versions.
+I created this tool to make conversion easier for old ESX versions… and to improve my Python3 skills ;)
+The script works only on Windows for now.
 
 ## Usage:
     vmx2ovf [-h] [-v] [-d DEST] [-z | -Z] FILE...
