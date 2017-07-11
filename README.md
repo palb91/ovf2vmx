@@ -1,5 +1,5 @@
 
-# ovf2vmx
+# vmx2ovf
 VMX to OVF virtual machines converter. (ovftool wrapper)
 
 I created this tool to make conversion easier for old ESX versions… and to improve my Python3 skills ;)
